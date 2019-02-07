@@ -3,7 +3,7 @@
 #  Purpose:  A CMake build script for SQLiteModernCPP library
 #  Author:   NikitaFeodonit, nfeodonit@yandex.com
 # ****************************************************************************
-#    Copyright (c) 2017-2018 NikitaFeodonit
+#    Copyright (c) 2017-2019 NikitaFeodonit
 #
 #    This file is part of the LibCMaker_SQLiteModernCPP project.
 #
@@ -25,9 +25,8 @@ cmake_minimum_required(VERSION 3.4)
 
 project(LibCMaker_SQLiteModernCPP_Compile_Test CXX)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
-set(cmr_PRINT_DEBUG ON)
-
+option(CMAKE_VERBOSE_MAKEFILE "CMAKE_VERBOSE_MAKEFILE" OFF)
+option(cmr_PRINT_DEBUG "cmr_PRINT_DEBUG" OFF)
 
 #-----------------------------------------------------------------------
 # Configure to find_package()
@@ -42,148 +41,70 @@ endif()
 
 
 #-----------------------------------------------------------------------
-# Set path to LibCMaker root
+# Set path vars
 #-----------------------------------------------------------------------
 
-set(LibCMaker_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker")
-# Uncomment it if need functions from LibCMaker
-#list(APPEND CMAKE_MODULE_PATH "${LibCMaker_DIR}/cmake")
+set(LibCMaker_LIB_DIR "${CMAKE_CURRENT_LIST_DIR}/libs")
+set(cmr_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
 
-include(${LibCMaker_DIR}/cmake/cmr_find_package.cmake)
-
-
-#-----------------------------------------------------------------------
-# Set vars to LibCMaker_SQLiteModernCPP
-#-----------------------------------------------------------------------
-
-set(SQLITEMODERNCPP_lib_NAME     "SQLiteModernCPP")
-set(SQLITEMODERNCPP_lib_VERSION  "3.2")
-set(SQLITEMODERNCPP_lib_DIR    "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker_SQLiteModernCPP")
-
-# To use below for sample sources.
-set(cmr_UNPACKED_DIR ${CMAKE_CURRENT_BINARY_DIR}/download/unpacked)
-
-# To use our FindSQLiteModernCPP.cmake.
-list(APPEND CMAKE_MODULE_PATH "${SQLITEMODERNCPP_lib_DIR}/cmake/modules")
-
-set(COPY_SQLITEMODERNCPP_CMAKE_BUILD_SCRIPTS ON)
-
-
-#-----------------------------------------------------------------------
-# Library specific vars and options
-#-----------------------------------------------------------------------
-
-
-#-----------------------------------------------------------------------
-# Build and install the SQLite3
-#-----------------------------------------------------------------------
-
-set(SQLITE3_lib_NAME     "SQLite3")
-set(SQLITE3_lib_VERSION  "3.24.0")
-set(SQLITE3_lib_DIR      "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker_SQLite3")
-
-# To use our FindSQLite3.cmake.
-list(APPEND CMAKE_MODULE_PATH "${SQLITE3_lib_DIR}/cmake/modules")
-
-set(COPY_SQLITE3_CMAKE_BUILD_SCRIPTS ON)
-
-
-#option(BUILD_SHARED_LIBS "build shared library" ${BUILD_SHARED_LIBS})
-option(SQLITE_BUILD_SHELL "Build the sqlite3 shell" ON)
-
-option(SQLITE_THREADSAFE "build a thread-safe library" ON)
-option(SQLITE_OMIT_LOAD_EXTENSION
-  "omits the entire extension loading mechanism" OFF
-)
-
-option(SQLITE_ENABLE_FTS3
-  "version 3 of the full-text search engine, see also SQLITE_ENABLE_FTS4 which enables FTS3 as well"
-  OFF
-)
-option(SQLITE_ENABLE_FTS3_PARENTHESIS
-  "modifies the query pattern parser in FTS3 such that it supports operators AND and NOT and also allows query expressions to contain nested parenthesis"
-  OFF
-)
-option(SQLITE_ENABLE_FTS4
-  "versions 3 and 4 of the full-text search engine" OFF
-)
-option(SQLITE_ENABLE_FTS5 "versions 5 of the full-text search engine" OFF)
-option(SQLITE_ENABLE_ICU "the ICU extension to SQLite to be added" OFF)
-option(SQLITE_ENABLE_JSON1
-  "the JSON SQL functions are added to the build automatically" OFF
-)
-option(SQLITE_ENABLE_RTREE "include support for the R*Tree index extension" OFF)
-option(SQLITE_ENABLE_COLUMN_METADATA
-  "include APIs that provide access to meta-data about tables and queries"
-  OFF
-)
-
-option(SQLITE_DEBUG "Build SQLite debug features" OFF)
-option(SQLITE_MEMDEBUG "Build SQLite memory debug features" OFF)
-
-
-#include(${LibCMaker_DIR}/cmake/cmr_find_package.cmake)
-cmr_find_package(
-  LibCMaker_DIR   ${LibCMaker_DIR}
-  NAME            ${SQLITE3_lib_NAME}
-  VERSION         ${SQLITE3_lib_VERSION}
-  LIB_DIR         ${SQLITE3_lib_DIR}
-  REQUIRED
-)
-
-
-#-----------------------------------------------------------------------
-# Build, install and find the SQLiteModernCPP
-#-----------------------------------------------------------------------
-
-# Make build and install the library at a config CMake phase.
-#include(${LibCMaker_DIR}/cmake/cmr_find_package.cmake)
-cmr_find_package(
-  LibCMaker_DIR   ${LibCMaker_DIR}
-  NAME            ${SQLITEMODERNCPP_lib_NAME}
-  VERSION         ${SQLITEMODERNCPP_lib_VERSION}
-  LIB_DIR         ${SQLITEMODERNCPP_lib_DIR}
-  REQUIRED
-)
-
-
-#-----------------------------------------------------------------------
-# Link to the library
-#-----------------------------------------------------------------------
-
-find_package(Threads REQUIRED)
-
-if(NOT CMAKE_DL_LIBS)
-  message(FATAL_ERROR "Library 'dl' is required.")
+if(NOT cmr_UNPACKED_DIR)
+  set(cmr_UNPACKED_DIR "${PROJECT_BINARY_DIR}/download/unpacked")
 endif()
-add_library(Dl::dl INTERFACE IMPORTED)
-set_property(TARGET Dl::dl PROPERTY
-  INTERFACE_LINK_LIBRARIES "${CMAKE_DL_LIBS}"
+
+
+#-----------------------------------------------------------------------
+# LibCMaker settings
+#-----------------------------------------------------------------------
+
+set(LibCMaker_DIR "${LibCMaker_LIB_DIR}/LibCMaker")
+list(APPEND CMAKE_MODULE_PATH "${LibCMaker_DIR}/cmake")
+include(cmr_find_package)
+
+
+#-----------------------------------------------------------------------
+# Download, configure, build, install and find the required libraries
+#-----------------------------------------------------------------------
+
+option(BUILD_TESTING "Build the testing tree." OFF)
+if(BUILD_TESTING)
+  enable_testing()
+  include(${LibCMaker_LIB_DIR}/LibCMaker_GoogleTest/cmr_build_googletest.cmake)
+endif()
+
+include(${LibCMaker_LIB_DIR}/LibCMaker_SQLite3/cmr_build_sqlite3.cmake)
+include(
+  ${LibCMaker_LIB_DIR}/LibCMaker_SQLiteModernCPP/cmr_build_sqlitemoderncpp.cmake
 )
 
 
-# Get an example sources from the lib sources.
-set(lib_EXAMPLES_SRC_DIR
-  "${cmr_UNPACKED_DIR}/sqlitemoderncpp-${SQLITEMODERNCPP_lib_VERSION}/sqlite_modern_cpp-${SQLITEMODERNCPP_lib_VERSION}/tests"
-)
+#-----------------------------------------------------------------------
+# Build the executable of the example
+#-----------------------------------------------------------------------
+
+set(example_src_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 
 add_executable(${PROJECT_NAME}
-#  ${lib_EXAMPLES_SRC_DIR}/simple_examples.cc
-  check_if_table_and_column_of_table_exists.cpp
+  ${example_src_DIR}/example.cpp
 )
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  CXX_STANDARD 14
-)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
+
+
+#-----------------------------------------------------------------------
+# Link to the libraries
+#-----------------------------------------------------------------------
 
 # SQLiteModernCPP
-target_include_directories(${PROJECT_NAME} PRIVATE ${SQLITEMODERNCPP_INCLUDE_DIR})
+target_include_directories(
+  ${PROJECT_NAME} PRIVATE ${SQLITEMODERNCPP_INCLUDE_DIR}
+)
 
 # SQLite3
-target_include_directories(${PROJECT_NAME} PRIVATE ${SQLITE3_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SQLITE3_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE sqlite3)
 
-# Threads
-target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 
-# dl
-target_link_libraries(${PROJECT_NAME} PRIVATE Dl::dl)
+#-----------------------------------------------------------------------
+# Testing
+#-----------------------------------------------------------------------
+
+set(test_src_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
+add_subdirectory(test)

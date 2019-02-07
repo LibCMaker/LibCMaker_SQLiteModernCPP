@@ -1,14 +1,14 @@
+// Based on the code from:
+// https://github.com/SqliteModernCpp/sqlite_modern_cpp/blob/master/tests/simple_examples.cc
+// and from:
+// https://github.com/SqliteModernCpp/sqlite_modern_cpp/issues/171#issuecomment-416000254
+
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <sqlite_modern_cpp.h>
 using namespace sqlite;
 using namespace std;
-
-// Based on the code from:
-// https://github.com/SqliteModernCpp/sqlite_modern_cpp/blob/master/tests/simple_examples.cc
-// and from:
-// https://github.com/SqliteModernCpp/sqlite_modern_cpp/issues/171#issuecomment-416000254
 
 struct TmpFile
 {
