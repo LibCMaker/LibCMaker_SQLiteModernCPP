@@ -86,7 +86,11 @@ set(example_src_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 add_executable(${PROJECT_NAME}
   ${example_src_DIR}/example.cpp
 )
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
+set(_CXX_STANDARD 14)
+if(ANDROID)
+  set(_CXX_STANDARD 17)
+endif()
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${_CXX_STANDARD})
 
 
 #-----------------------------------------------------------------------

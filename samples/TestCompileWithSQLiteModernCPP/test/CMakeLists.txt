@@ -31,10 +31,12 @@ if(BUILD_TESTING)
     PRIVATE
       ${test_src_DIR}/example_test.cpp
   )
-  set_target_properties(${test_NAME} PROPERTIES
-    CXX_STANDARD 14
-    C_STANDARD 11
-  )
+
+  set(_CXX_STANDARD 14)
+  if(ANDROID)
+    set(_CXX_STANDARD 17)
+  endif()
+  set_property(TARGET ${test_NAME} PROPERTY CXX_STANDARD ${_CXX_STANDARD})
 
   # SQLiteModernCPP
   target_include_directories(
