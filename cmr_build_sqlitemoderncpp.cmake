@@ -30,7 +30,7 @@
 #-----------------------------------------------------------------------
 
 set(SQLITEMODERNCPP_lib_NAME     "SQLiteModernCPP")
-set(SQLITEMODERNCPP_lib_VERSION  "3.2")
+set(SQLITEMODERNCPP_lib_VERSION  "3.2.20190217")
 set(SQLITEMODERNCPP_lib_DIR      "${CMAKE_CURRENT_LIST_DIR}")
 
 # To use our Find<LibName>.cmake.

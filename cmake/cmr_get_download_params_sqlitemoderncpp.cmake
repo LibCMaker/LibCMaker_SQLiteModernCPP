@@ -27,6 +27,12 @@
     set(arch_file_sha
       "6a741482c0ef474adfc84260b5507d480d5b8e528e67e059284c2f1f9f986d74")
   endif()
+  if(version VERSION_EQUAL "3.2.20190217")
+    set(arch_file_sha
+      "cfb9613b0435c58ca07f45f9553ad2f4d196cdcd8a2c71a1594a4403ad6b4ba5")
+    set(src_commit
+      "936cd0c86aacac87a3dab32906397944ae5f6c3d")
+  endif()
 
   # https://github.com/SqliteModernCpp/sqlite_modern_cpp/archive/v3.2.tar.gz
   set(base_url "https://github.com/SqliteModernCpp/sqlite_modern_cpp/archive")
@@ -43,3 +49,10 @@
     "${unpack_to_dir}/sqlite_modern_cpp-${version}" PARENT_SCOPE
   )
   set(${out_VERSION_BUILD_DIR} "${build_dir}/${src_dir_name}" PARENT_SCOPE)
+
+  if(src_commit)
+    set(${out_ARCH_SRC_URL} "${base_url}/${src_commit}.tar.gz" PARENT_SCOPE)
+    set(${out_UNPACKED_SOURCES_DIR}
+      "${unpack_to_dir}/sqlite_modern_cpp-${src_commit}" PARENT_SCOPE
+    )
+  endif()

@@ -32,7 +32,7 @@ if(BUILD_TESTING)
       ${test_src_DIR}/example_test.cpp
   )
   set_target_properties(${test_NAME} PROPERTIES
-    CXX_STANDARD 11
+    CXX_STANDARD 14
     C_STANDARD 11
   )
 
