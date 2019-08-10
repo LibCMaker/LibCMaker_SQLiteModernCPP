@@ -28,6 +28,7 @@ project(LibCMaker_SQLiteModernCPP_Compile_Test CXX)
 option(CMAKE_VERBOSE_MAKEFILE "CMAKE_VERBOSE_MAKEFILE" OFF)
 option(cmr_PRINT_DEBUG "cmr_PRINT_DEBUG" OFF)
 
+
 #-----------------------------------------------------------------------
 # Configure to find_package()
 #-----------------------------------------------------------------------
@@ -35,7 +36,7 @@ option(cmr_PRINT_DEBUG "cmr_PRINT_DEBUG" OFF)
 # Set CMake's search path for find_*() commands.
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
 
-if(ANDROID)
+if(ANDROID OR IOS)
   list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}")
 endif()
 
