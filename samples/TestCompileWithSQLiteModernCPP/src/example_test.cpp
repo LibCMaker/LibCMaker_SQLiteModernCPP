@@ -34,7 +34,7 @@
 using namespace sqlite;
 using namespace std;
 
-int main() {
+TEST(Examle, test) {
   try {
     database db(":memory:");
 
