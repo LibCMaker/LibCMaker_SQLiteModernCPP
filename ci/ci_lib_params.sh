@@ -34,6 +34,7 @@ cmr_LIB_DEPS_NAMES=(
   "LibCMaker_GoogleTest"
   "LibCMaker_ICU"
   "LibCMaker_SQLite3"
+  "LibCMaker_SQLiteModernCPP"
 )
 
 
