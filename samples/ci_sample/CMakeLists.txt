@@ -47,6 +47,13 @@ cmr_common_sample_part__add_executable()
 # Download, configure, build, install and find the required libraries
 #-----------------------------------------------------------------------
 
+if(SQLITE_ENABLE_ICU)
+  # NOTE: must be 'cmr_build_icu_host_tools.cmake' for Android and iOS.
+  #include(${LibCMaker_LIB_DIR}/LibCMaker_ICU/cmr_build_icu.cmake)
+
+  include(${LibCMaker_LIB_DIR}/LibCMaker_Skia/cmr_build_skia.cmake)
+endif()
+
 include(${LibCMaker_LIB_DIR}/LibCMaker_SQLite3/cmr_build_sqlite3.cmake)
 include(
   ${LibCMaker_LIB_DIR}/LibCMaker_SQLiteModernCPP/cmr_build_sqlitemoderncpp.cmake
@@ -81,6 +88,11 @@ target_include_directories(
 
 # SQLite3
 target_link_libraries(${PROJECT_NAME} PRIVATE sqlite3)
+
+if(SQLITE_ENABLE_ICU)
+  # ICU
+  target_link_libraries(${PROJECT_NAME} PRIVATE ICU::ICU)
+endif()
 
 
 #-----------------------------------------------------------------------
