@@ -30,11 +30,7 @@ if(BUILD_TESTING)
       ${test_src_DIR}/example_test.cpp
   )
 
-  set(_CXX_STANDARD 14)
-  if(ANDROID)
-    set(_CXX_STANDARD 17)
-  endif()
-  set_property(TARGET ${test_NAME} PROPERTY CXX_STANDARD ${_CXX_STANDARD})
+  set_property(TARGET ${test_NAME} PROPERTY CXX_STANDARD 17)
 
   # SQLiteModernCPP
   target_include_directories(

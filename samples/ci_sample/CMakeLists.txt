@@ -70,11 +70,7 @@ target_sources(${PROJECT_NAME}
   PRIVATE
     ${example_src_DIR}/example.cpp
 )
-set(_CXX_STANDARD 14)
-if(ANDROID)
-  set(_CXX_STANDARD 17)
-endif()
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${_CXX_STANDARD})
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 
 #-----------------------------------------------------------------------
